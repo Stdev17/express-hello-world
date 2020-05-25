@@ -1,9 +1,9 @@
 pipeline {
     agent {
-        dockerfile true
-    }
-    agent {
-        label 'docker'
+        docker {
+            dockerfile true
+            label 'docker'
+        }
     }
     stages {
         stage('Clone repository') {
