@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'docker'
-    }
+    agent none
     stages {
         stage('Clone repository') {
             /* Let's make sure we have the repository cloned to our workspace */
