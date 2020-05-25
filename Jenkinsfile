@@ -12,9 +12,11 @@ pipeline {
             /* This builds the actual image; synonymous to
             * docker build on the command line */
             steps {
-                def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}")
-                docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
-                    app.push("latest")
+                script {
+                    def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}")
+                    docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
+                        app.push("latest")
+                    }
                 }
             }
         }
