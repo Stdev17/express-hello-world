@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            dockerfile true
-            label 'docker'
-        }
+        label 'docker'
     }
     stages {
         stage('Clone repository') {
@@ -18,7 +15,7 @@ pipeline {
             * docker build on the command line */
             steps {
                 script {
-                    def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}")
+                    def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}", "-f Dockerfile .")
                     docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
                         app.push("latest")
                     }
