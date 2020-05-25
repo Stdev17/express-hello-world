@@ -36,9 +36,13 @@ spec:
             steps {
                 container('docker') {
                 // 이미지명 바꿔 주세요!!!
-                    def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}", "-f Dockerfile .")
-                    docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
-                        app.push("latest")
+                    steps {
+                        script {
+                            def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}", "-f Dockerfile .")
+                            docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
+                                app.push("latest")
+                            }
+                        }
                     }
                 }
             }
