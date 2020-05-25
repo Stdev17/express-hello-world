@@ -19,8 +19,8 @@ pipeline {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
         // 별도 이미지 레지스트리를 등록해 주세요
+        // Jenkins에 별도 Credential을 등록하셔야 합니다(액세스 ID, 시크릿과 함께)
         // GCR을 쓰시면 google container registry auth 플러그인을 깔아 주세요.
-        // ECR을 쓰시면 Jenkins에 별도 Credential을 등록하셔야 합니다(액세스 ID, 시크릿과 함께)
         docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
