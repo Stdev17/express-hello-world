@@ -9,7 +9,7 @@ RUN cd /tmp && npm install && npm install -g jest
 RUN mkdir -p /opt/hello-world && cp -a /tmp/node_modules /opt/hello-world
 
 # Run test(jest)
-CMD ["jest"]
+CMD ["npm" "test"]
 
 # Setup workdir
 WORKDIR /opt/hello-world
