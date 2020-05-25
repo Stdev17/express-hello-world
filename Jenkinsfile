@@ -1,18 +1,41 @@
 pipeline {
-    agent { dockerfile true }
+    agent {
+        kubernetes {
+            label 'hello-world'
+            defaultContainer 'jnlp'
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+labels:
+  component: ci
+spec:
+  containers:
+  - name: docker
+    image: docker:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+"""
+        }
+    }
     stages {
         stage('Clone repository') {
-            /* Let's make sure we have the repository cloned to our workspace */
             steps {
                 checkout scm
             }
         }
-
-        stage('Build image') {
-            /* This builds the actual image; synonymous to
-            * docker build on the command line */
+        stage('Build') {
             steps {
-                script {
+                container('docker') {
+                // 이미지명 바꿔 주세요!!!
                     def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}", "-f Dockerfile .")
                     docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
                         app.push("latest")
@@ -22,4 +45,3 @@ pipeline {
         }
     }
 }
-
