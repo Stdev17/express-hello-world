@@ -36,14 +36,22 @@ spec:
             steps {
                 container('docker') {
                 // 이미지명 바꿔 주세요!!!
-                    steps {
-                        script {
-                            def app = docker.build("superb-flag-275605/hello-world":"${env.BUILD_NUMBER}", "-f Dockerfile .")
-                            docker.withRegistry('https://gcr.io', 'gcr:my-credential-id') {
-                                app.push("latest")
-                            }
-                        }
-                    }
+                sh """
+                    docker build -t gcr.io/superb-flag-275605/hello-world .
+                """
+                sh """
+                    docker tag gcr.io/superb-flag-275605/hello-world gcr.io/superb-flag-275605/hello-world:$BUILD_NUMBER
+                """
+                // GCR 기준입니다. ECR 등은 크레덴셜을 따로 마련하시길...
+                sh """
+                    cat keyfile.json | docker login -u _json_key --password-stdin https://gcr.io
+                """
+                sh """
+                    docker push gcr.io/superb-flag-275605/hello-world
+                """
+                sh """
+                    docker image prune -a -y
+                """
                 }
             }
         }
